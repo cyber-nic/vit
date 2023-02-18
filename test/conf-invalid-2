@@ -1,0 +1,5 @@
+[alias]
+  $ = /home
+  foo = /some/path
+
+# invalid alias name

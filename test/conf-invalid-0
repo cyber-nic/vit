@@ -1,0 +1,6 @@
+[alias]
+0 = /home
+foo = /some/path
+bar
+
+# missing path
