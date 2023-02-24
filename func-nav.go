@@ -8,7 +8,7 @@ import (
 )
 
 func validateAlphaNumeric(id string) {
-	isAlphaNumeric := regexp.MustCompile(`^[a-zA-Z0-9.]*$`).MatchString(id)
+	isAlphaNumeric := regexp.MustCompile(`^[a-zA-Z0-9.\-]*$`).MatchString(id)
 	if !isAlphaNumeric {
 		exitGracefully(fmt.Sprintf("Invalid alias '%s'. Must be alphanumeric or '.'", id))
 	}
