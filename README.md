@@ -49,3 +49,8 @@ add this to .bashrc
 foo = ~/test
 
 go run \*.go init
+
+# adding multiple folders
+```
+for d in `find .  -maxdepth 1 | sort` ; do vit alias add "$d"; done
+```
