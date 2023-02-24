@@ -18,23 +18,23 @@ function v() { if [ "$#" -eq 0 ]; then vit; elif [ "$#" -eq 1 ]; then cd `vit al
 vit init -> create a vit config file (typically ~/.vit/config)\n
 vit list -> list current config\n
 
-// vit alias add foo .
+// vit alias set foo .
 
 // vit init
-// vit alias add . // add current dir and use default name
-// vit alias add .. // add parent dir and use default name
-// vit alias add foo .. // alias 'foo' to parent dir
-// vit alias add 0 . // alias '0' to current dir
+// vit alias set . // set current dir and use default name
+// vit alias set .. // set parent dir and use default name
+// vit alias set foo .. // alias 'foo' to parent dir
+// vit alias set 0 . // alias '0' to current dir
 
 # WARNING
 
 vit supports navigating to paths using either the alias index or name. The index takes PRECEDENSE.
 
-// vit alias add 0 /path/to/bar
+// vit alias set 0 /path/to/bar
 
 // vit alias get foo
 // vit alias rm foo
-// vit alias add 0 /other/path/to/bar -f
+// vit alias set 0 /other/path/to/bar -f
 
 // vit cd bar
 // vit cd 0

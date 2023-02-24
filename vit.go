@@ -46,7 +46,7 @@ func main() {
 		vit list -> list current config\n
 
 		`)
-		
+
 	}
 
 	// todo: support -c arg to specify a custom config file -- used for testing
@@ -73,7 +73,7 @@ func main() {
 		os.Exit(0)
 	}
 	if len(args) == 4 && args[0] == "alias" && args[1] == "add" {
-		// addAliasNamedPath(args[2])
+		addAliasNamedPath(args[2], args[3])
 		os.Exit(0)
 	}
 	// log.Fatal(fmt.Errorf("alias: invalid arguments"))

@@ -8,9 +8,9 @@ import (
 )
 
 func validateAlphaNumeric(id string) {
-	isAlphaNumeric := regexp.MustCompile(`^[a-zA-Z0-9]*$`).MatchString(id)
+	isAlphaNumeric := regexp.MustCompile(`^[a-zA-Z0-9.]*$`).MatchString(id)
 	if !isAlphaNumeric {
-		exitGracefully(fmt.Sprintf("invalid argument. Alias index or name must be alphanumeric"))
+		exitGracefully(fmt.Sprintf("Invalid alias '%s'. Must be alphanumeric or '.'", id))
 	}
 }
 
@@ -40,6 +40,11 @@ func getAlias(id string) Alias {
 }
 
 func getAliasPath(id string) {
+	a := getAlias(id)
+	fmt.Println(a.path)
+}
+
+func settAliasPath(id string) {
 	a := getAlias(id)
 	fmt.Println(a.path)
 }

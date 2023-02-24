@@ -74,60 +74,84 @@ func getConfig() []Alias {
 	return parseConfFileLines(ls)
 }
 
-func normalizePath(path string) (string, error) {
+func normalizePath(path string) string {
 	abs, err := filepath.Abs(path)
 	if err != nil {
-		return "", fmt.Errorf("%s : failed to compute absolute path", path)
+		fmt.Fprintln(os.Stderr, fmt.Errorf("%s : failed to compute absolute path", path))
+		os.Exit(1)
 	}
 
 	fileInfo, err := os.Stat(abs)
 	if err != nil {
-		return "", fmt.Errorf("%s : invalid path", abs)
-	}
-
-	if fileInfo.IsDir() {
-		return abs, nil
-	}
-
-	return "", fmt.Errorf("Invalid path")
-}
-
-func addAliasCurrentPath(path string) {
-	n, err := normalizePath(path)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, fmt.Errorf("%s : invalid path", abs))
 		os.Exit(1)
 	}
 
-	a := ""
-	if n == "/" {
-		a = "root"
+	if fileInfo.IsDir() {
+		return abs
 	}
 
-	res := strings.Split(n, "/")
-	a = res[len(res)-1]
-	
+	fmt.Fprintln(os.Stderr, fmt.Errorf("Invalid path"))
+	os.Exit(1)
+	return ""
+}
 
-	conf := getConfPath()
-	f, err := os.OpenFile(conf, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+func getAliasFromPath(path string) string {
+	if path == "/" {
+		return "root"
+	}
+
+	res := strings.Split(path, "/")
+	r := res[len(res)-1]
+	return r
+}
+
+func testAlias(a string) {
+	validateAlphaNumeric(a)
+
+	conf := getConfig()
+	for _, c := range conf {
+		if a == c.name {
+			fmt.Fprintln(os.Stderr, fmt.Errorf("Alias '%s' already in use", c.name))
+			os.Exit(1)
+		}
+	}
+}
+
+func addAliasCurrentPath(p string) {
+	n := normalizePath(p)
+	a := getAliasFromPath(n)
+	testAlias(a)
+	appendAlias(a, n)
+}
+
+func addAliasNamedPath(p string, a string) {
+	n := normalizePath(p)
+	testAlias(a)
+	appendAlias(a, n)
+}
+
+func appendAlias(a string, p string) {
+	confPath := getConfPath()
+	f, err := os.OpenFile(confPath, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
-			panic(err)
+		panic(err)
 	}
 	defer f.Close()
 
-	if _, err = f.WriteString(fmt.Sprintf("  %s = %s", a, n)); err != nil {
-			panic(err)
+	if _, err = f.WriteString(fmt.Sprintf("  %s = %s\n", a, p)); err != nil {
+		panic(err)
 	}
 
 }
 
 func printConfig() {
-	alias := getConfig()
+	conf := getConfig()
 	w := new(tabwriter.Writer)
 	// minwidth, tabwidth, padding, padchar, flags
 	w.Init(os.Stdout, 3, 8, 0, '\t', 0)
 
-	for _, a := range alias {
+	for _, a := range conf {
 		// fmt.Printf("%d / %s = %s\n\n", a.index, a.name, a.path)
 		fmt.Fprintln(w, fmt.Sprintf("%d\t%s\t%s", a.index, a.name, a.path))
 
@@ -149,4 +173,9 @@ func createVitConfig() {
 	if err != nil {
 		exitGracefully(fmt.Sprintf("%s", err))
 	}
+}
+
+// sort
+func sortConfItems() {
+	// todo
 }
