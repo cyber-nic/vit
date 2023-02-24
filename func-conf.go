@@ -4,7 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
+	"text/tabwriter"
 )
 
 func getConfPath() string {
@@ -70,18 +72,71 @@ func getConfig() []Alias {
 
 	ls := readFileLines(path)
 	return parseConfFileLines(ls)
+}
+
+func normalizePath(path string) (string, error) {
+	abs, err := filepath.Abs(path)
+	if err != nil {
+		return "", fmt.Errorf("%s : failed to compute absolute path", path)
+	}
+
+	fileInfo, err := os.Stat(abs)
+	if err != nil {
+		return "", fmt.Errorf("%s : invalid path", abs)
+	}
+
+	if fileInfo.IsDir() {
+		return abs, nil
+	}
+
+	return "", fmt.Errorf("Invalid path")
+}
+
+func addAliasCurrentPath(path string) {
+	n, err := normalizePath(path)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+
+	a := ""
+	if n == "/" {
+		a = "root"
+	}
+
+	res := strings.Split(n, "/")
+	a = res[len(res)-1]
+	
+
+	conf := getConfPath()
+	f, err := os.OpenFile(conf, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	if err != nil {
+			panic(err)
+	}
+	defer f.Close()
+
+	if _, err = f.WriteString(fmt.Sprintf("  %s = %s", a, n)); err != nil {
+			panic(err)
+	}
 
 }
 
 func printConfig() {
 	alias := getConfig()
+	w := new(tabwriter.Writer)
+	// minwidth, tabwidth, padding, padchar, flags
+	w.Init(os.Stdout, 3, 8, 0, '\t', 0)
+
 	for _, a := range alias {
-		fmt.Printf("%d / %s = %s\n", a.index, a.name, a.path)
+		// fmt.Printf("%d / %s = %s\n\n", a.index, a.name, a.path)
+		fmt.Fprintln(w, fmt.Sprintf("%d\t%s\t%s", a.index, a.name, a.path))
+
 	}
+	w.Flush()
 }
 
 func createVitConfig() {
-	fmt.Println(">> createVitConfig")
+	// fmt.Println(">> createVitConfig")
 
 	path := getConfPath()
 	f, err := os.Create(path)

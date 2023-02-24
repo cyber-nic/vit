@@ -10,9 +10,7 @@ See 'you can do this' https://stackoverflow.com/questions/52435908/how-to-change
 This tool's solution is to combine the 'vit' bin with a tiny bash function 'vd' which combines 'vit' and 'cd'.
 
 ```
-function vd() { cd `vit $1`; }
-
-function vd() { if [ "$1" ] && [ "$#" -eq 1 ]; then cd `vit alias get $1`; else echo "alias name or index necessary"; fi }
+function v() { if [ "$#" -eq 0 ]; then vit; elif [ "$#" -eq 1 ]; then cd `vit alias get $1`; else echo "Invalid args."; fi }
 
 ```
 

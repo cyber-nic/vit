@@ -60,22 +60,23 @@ func main() {
 		createVitConfig()
 		os.Exit(0)
 	}
-	if len(args) == 3 && args[0] == "alias" {
-		// add foo, get foo, rm foo
-		if args[1] == "add" {
-			printConfig()
-			os.Exit(0)
-		}
-		if args[1] == "get" {
-			getAliasPath(args[2])
-			os.Exit(0)
-		}
-		if args[1] == "rm" {
-			printConfig()
-			os.Exit(0)
-		}
-		log.Fatal(fmt.Errorf("alias: invalid arguments"))
+	if len(args) == 3 && args[0] == "alias" && args[1] == "get" {
+		getAliasPath(args[2])
+		os.Exit(0)
 	}
+	if len(args) == 3 && args[0] == "alias" && args[1] == "rm" {
+		printConfig()
+		os.Exit(0)
+	}
+	if len(args) == 3 && args[0] == "alias" && args[1] == "add" {
+		addAliasCurrentPath(args[2])
+		os.Exit(0)
+	}
+	if len(args) == 4 && args[0] == "alias" && args[1] == "add" {
+		// addAliasNamedPath(args[2])
+		os.Exit(0)
+	}
+	// log.Fatal(fmt.Errorf("alias: invalid arguments"))
 
 	if len(args) == 1 {
 		getAliasPath(args[0])
