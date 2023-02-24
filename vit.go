@@ -65,7 +65,7 @@ func main() {
 		os.Exit(0)
 	}
 	if len(args) == 3 && args[0] == "alias" && args[1] == "rm" {
-		printConfig()
+		removeAlias(args[2])
 		os.Exit(0)
 	}
 	if len(args) == 3 && args[0] == "alias" && args[1] == "add" {

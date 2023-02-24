@@ -1,10 +1,13 @@
 package main
 
 import (
+	// "io/ioutil"
+	// "log"
 	"bufio"
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"text/tabwriter"
 )
@@ -142,8 +145,64 @@ func appendAlias(a string, p string) {
 	if _, err = f.WriteString(fmt.Sprintf("  %s = %s\n", a, p)); err != nil {
 		panic(err)
 	}
-
 }
+
+// func removeAliasById(i int) {
+func removeAlias(n string) {
+	// confPath := getConfPath()
+	c := getConfig()
+
+	isNo := false
+	i, err := strconv.Atoi(n)
+	if err == nil {
+		isNo = true
+	}
+
+	for _, a := range c {
+		if isNo {
+			if a.index == i {
+				fmt.Println(a)
+				os.Exit(0)
+			}
+		}
+		if a.name == n {
+			fmt.Println(a)
+			os.Exit(0)
+		}
+	}
+	fmt.Printf("no alias found with id or name '%s'", n)
+	os.Exit(01)
+
+	//https://stackoverflow.com/questions/26152901/replace-a-line-in-text-file-golang
+	// f, err := ioutil.ReadFile(confPath)
+	// if err != nil {
+	// 				log.Fatalln(err)
+	// }
+
+	// lines := strings.Split(string(f), "\n")
+	// // for i, l := range lines {
+	// 	// fmt.Println(i,l)
+
+	// // }
+	// // lines.
+	// i := 2
+
+	// copy(lines[i:], lines[i+1:]) // Shift a[i+1:] left one index.
+	// lines[len(lines)-1] = ""     // Erase last element (write zero value).
+	// lines = lines[:len(lines)-1]     // Truncate slice.
+
+	// fmt.Println(lines) // [A B D E]
+
+	// o := strings.Join(lines, "\n")
+	// err = ioutil.WriteFile(confPath, []byte(o), 0644)
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// }
+}
+
+// func removeAliasByName(n sting) {
+
+// }
 
 func printConfig() {
 	conf := getConfig()
