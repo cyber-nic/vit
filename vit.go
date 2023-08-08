@@ -1,3 +1,4 @@
+// vit is a simple and tiny filesystem navigator
 package main
 
 import (
@@ -49,7 +50,6 @@ func main() {
 
 	}
 
-	// todo: support -c arg to specify a custom config file -- used for testing
 	if len(args) == 1 && args[0] == "init" {
 		path := getConfPath()
 		if f, _ := os.Stat(path); f != nil {
@@ -76,7 +76,6 @@ func main() {
 		addAliasNamedPath(args[2], args[3])
 		os.Exit(0)
 	}
-	// log.Fatal(fmt.Errorf("alias: invalid arguments"))
 
 	if len(args) == 1 {
 		getAliasPath(args[0])

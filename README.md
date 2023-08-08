@@ -1,4 +1,4 @@
-vit is a tiny and simple filesystem navigation helper.
+vit is a simple and tiny filesystem navigator
 
 The term 'vit' is a play 'git' and 'vite', the French word for fast.
 
